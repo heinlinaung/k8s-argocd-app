@@ -12,8 +12,8 @@ This project follows the **GitOps pattern** with two separate repositories:
 │  (This Repository)      │    │                          │
 │                         │    │                          │
 │  • Application Code     │    │  • Kubernetes Manifests  │
-│  • Dockerfile           │    │  • Helm Charts           │
-│  • Dependencies         │    │  • ArgoCD Applications   │
+│  • Dockerfile           │    │  • ArgoCD Applications   │
+│  • Dependencies         │    │                          │
 └─────────────────────────┘    └──────────────────────────┘
          │                                    │
          │                                    │
@@ -86,16 +86,36 @@ k8s-argocd-app/
 
 ## Related Repositories
 
-- **Deployment Repository**: `k8s-argocd-deployment` - Contains Kubernetes manifests and ArgoCD applications
+- **Deployment Repository**: `k8s-argocd-deployment` - Contains Kubernetes manifests
 - **Container Registry**: Built images are pushed to your configured registry
 
-## ArgoCD Integration
+## ArgoCD Integration [local setup instructions]
 
 This application is deployed using ArgoCD with the following configuration:
 - **Source**: k8s-argocd-deployment repository
 - **Sync Policy**: Automatic (configurable)
 - **Self-Heal**: Enabled to maintain desired state
 - **Prune**: Removes resources not defined in Git
+```
+## Install ArgoCD CLI
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+kubectl create namespace argocd
+helm install argocd argo/argo-cd --namespace argocd
+
+## Browse ArgoCD UI
+kubectl port-forward svc/argocd-server -n argocd 8080:80
+## Get initial admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+## Apply ArgoCD Application
+kubectl apply -f argocd-app.yaml
+kubectl create secret docker-registry ghcr-secret \
+  --docker-server=ghcr.io \
+  --docker-username=<USERNAME> \
+  --docker-password=<REGISTERY_TOKEN> \
+  --namespace=default
+```
 
 ## Getting Started
 
