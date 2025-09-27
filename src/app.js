@@ -10,7 +10,7 @@ let grades = [];
 
 app.get('/', (req, res) => {
   console.log('Welcome');
-  res.send('Welcome to the Grade Submission API');
+  res.send('Welcome to the Grade Submission API (v1.0.1)');
 });
 
 app.get('/grades', (req, res) => {
