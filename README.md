@@ -113,6 +113,6 @@ This application is deployed using ArgoCD with the following configuration:
 
 ---
 ## Github Action Pipeline test
-- v1.0.0
+- v1.0.1
 
 *This repository is part of a GitOps workflow. For deployment configuration, see the `k8s-argocd-deployment` repository.*
